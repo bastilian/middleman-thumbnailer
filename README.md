@@ -7,7 +7,7 @@ Generate thumbnail versions of your jpeg & png images
 Add this line to your `Gemfile`:
 
 ```ruby
-gem 'middleman-thumbnailer', :git => 'https://github.com/nhemsley/middleman-directory.git'
+gem 'middleman-thumbnailer', :git => 'git://github.com/nhemsley/middleman-directory.git'
 ```
 
 And something like this to your `config.rb`:
