@@ -3,18 +3,30 @@ require 'middleman-thumbnailer/thumbnail-generator'
 module Middleman
   module Thumbnailer
     class << self
+
+      attr_accessor :options
+
       def registered(app, options={})
 
-        options[:something] ||= 'something'
+        options[:filetypes] ||= [:jpg, :jpeg, :png]
+
+
+        Thumbnailer.options = options
+
+        app.helpers Helpers
 
         app.after_configuration do
+
+          #stash the source images dir in options for the Rack middleware
+          options[:images_source_dir] = File.join(source_dir, images_dir)
+          options[:source_dir] = source_dir
 
           dimensions = options[:dimensions]
 
           dir = Pathname.new(File.join(build_dir, images_dir))
 
           after_build do |builder|
-            files = FileList["#{dir}/**/*.{png,jpg,jpeg}*"]
+            files = Dir["#{dir}/**/*.{#{options[:filetypes].join(',')}}"]
 
             files.each do |file|
 
@@ -22,9 +34,103 @@ module Middleman
               ThumbnailGenerator.generate(dir, Pathname.new(build_dir.to_s), file, specs)
             end
           end
+
+          sitemap.register_resource_list_manipulator(:thumbnailer, SitemapExtension.new(self), true)
+
+          app.use Rack, options
         end
       end
       alias :included :registered
+    end
+
+    module Helpers
+      def thumbnail(image, name)
+        options = Thumbnailer.options
+        dimensions = options[:dimensions]
+        specs = ThumbnailGenerator.specs(image, dimensions)
+
+        image_tag(specs[name][:name])
+      end
+    end
+
+    class SitemapExtension
+      def initialize(app)
+        @app = app
+      end
+
+      # Add sitemap resource for every image in the sprockets load path
+      def manipulate_resource_list(resources)
+
+        images_dir_abs = File.join(@app.source_dir, @app.images_dir)
+
+        images_dir = @app.images_dir
+
+        options = Thumbnailer.options
+        dimensions = options[:dimensions]
+
+        files = Dir["#{images_dir_abs}/**/*.{#{options[:filetypes].join(',')}}"]
+
+        resource_list = files.map do |file|
+          specs = ThumbnailGenerator.specs(file, dimensions)
+          specs.map do |name, spec|
+            resource = nil
+            resource = Middleman::Sitemap::Resource.new(@app.sitemap, File.join(@app.images_dir, spec[:name])) unless name == :original
+          end
+        end.flatten.reject {|resource| resource.nil? }
+
+        resources + resource_list
+      end
+    end
+
+
+    # Rack middleware to convert images on the fly
+    class Rack
+
+      # Init
+      # @param [Class] app
+      # @param [Hash] options
+      def initialize(app, options={})
+        @app = app
+        @options = options
+
+        files = Dir["#{options[:images_source_dir]}/**/*.{#{options[:filetypes].join(',')}}"]
+
+        @original_map = ThumbnailGenerator.original_map_for_files(files, options[:dimensions])
+
+      end
+
+      # Rack interface
+      # @param [Rack::Environmemt] env
+      # @return [Array]
+      def call(env)
+        status, headers, response = @app.call(env)
+
+        path = env["PATH_INFO"]
+
+        path_on_disk = File.join(@options[:source_dir], path)
+
+        #TODO: caching
+        if original_specs = @original_map[path_on_disk]
+          original_file = original_specs[:original]
+          spec = original_specs[:spec]
+          if spec.has_key? :dimensions
+            image = ::Magick::Image.read(original_file).first
+            blob = nil
+            image.change_geometry(spec[:dimensions]) do |cols, rows, img|
+              image.resize!(cols, rows)
+              blob = image.to_blob
+            end
+
+            unless blob.nil?
+              headers["Content-Length"] = ::Rack::Utils.bytesize(blob).to_s
+              headers["Content-Type"] = image.mime_type
+              response = [blob]
+            end
+          end
+        end
+
+        [status, headers, response]
+      end
     end
   end
 end

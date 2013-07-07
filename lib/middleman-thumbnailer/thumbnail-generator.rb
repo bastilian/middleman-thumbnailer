@@ -1,13 +1,12 @@
-require 'rmagick'
+require 'RMagick'
 
-require 'pry'
 module Middleman
   #actually creates the thumbnail names
   class ThumbnailGenerator
     class << self
 
       def specs(origin, dimensions)
-        ret = {original: origin}
+        ret = {original: {name: origin}}
         file_parts = origin.split('.')
         basename = file_parts[0..-2].join('.')
         ext = file_parts.last
@@ -20,12 +19,24 @@ module Middleman
       end
 
       def generate(dir, output_dir, origin, specs)
+        image = ::Magick::Image.read(origin).first
         specs.each do |name, spec|
-          image = RMagick::new dir.join(origin).to_s
-          image.change_geometry(spec[:dimensions]) do |cols, rows, img|
-            image.resize(cols, rows)
-            image.write output_dir.join(spec[:name])
+          if spec.has_key? :dimensions then
+            image.change_geometry(spec[:dimensions]) do |cols, rows, img|
+              image.resize!(cols, rows)
+              image.write spec[:name]
+            end
           end
+        end
+      end
+
+      def original_map_for_files(files, specs)
+        map = files.inject({}) do |memo, file|
+          generated_specs = self.specs(file, specs)
+          generated_specs.each do |name, spec|
+            memo[spec[:name]] = {:original => generated_specs[:original][:name], :spec => spec}
+          end
+          memo
         end
       end
     end
