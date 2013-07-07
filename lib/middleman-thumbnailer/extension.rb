@@ -1,4 +1,4 @@
-require 'rake'
+require 'middleman-thumbnailer/thumbnail-generator'
 
 module Middleman
   module Thumbnailer
@@ -9,14 +9,18 @@ module Middleman
 
         app.after_configuration do
 
-          dir = File.join(build_dir, images_dir)
+          dimensions = options[:dimensions]
+
+          dir = Pathname.new(File.join(build_dir, images_dir))
           prefix = build_dir + File::SEPARATOR
 
           after_build do |builder|
             files = FileList["#{dir}/**/*.{png,jpg,jpeg}*"]
 
             files.each do |file|
-              puts file
+
+              specs = ThumbnailGenerator.specs(file, dimensions)
+              ThumbnailGenerator.generate(dir, Pathname.new(build_dir.to_s), file, specs)
             end
           end
         end
