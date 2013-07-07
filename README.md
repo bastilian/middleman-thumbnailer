@@ -26,7 +26,7 @@ If you have a file in images called (for example) background.png, thumbnail vers
   background-small-200x.png
   background-medium-400x300.png
 
-If the :include_data_thumbnails option is set to true, the list of images will be shown for each image
+If the `:include_data_thumbnails` option is set to true, the list of images will be shown for each image displayed with the `thumbnail` helper
 
 ##Helpers
 
