@@ -9,6 +9,7 @@ module Middleman
       def registered(app, options={})
 
         options[:filetypes] ||= [:jpg, :jpeg, :png]
+        options[:include_data_thumbnails] = false unless options.has_key? :include_data_thumbnails
 
 
         Thumbnailer.options = options
@@ -44,12 +45,16 @@ module Middleman
     end
 
     module Helpers
-      def thumbnail(image, name)
+      def thumbnail(image, name, html_options = {})
         options = Thumbnailer.options
         dimensions = options[:dimensions]
         specs = ThumbnailGenerator.specs(image, dimensions)
 
-        image_tag(specs[name][:name])
+        specs_for_data_attribute = specs.map {|name, spec| "#{name}:#{spec[:name]}"}
+
+        html_options.merge!({'data-thumbnails' => specs_for_data_attribute.join('|')}) if options[:include_data_thumbnails]
+
+        image_tag(specs[name][:name], html_options)
       end
     end
 
