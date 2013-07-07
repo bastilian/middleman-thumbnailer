@@ -4,7 +4,7 @@ module Middleman
     class << self
 
       def generate(filename, dimensions)
-        {}
+        ret = {original: filename}
       end
     end
   end
