@@ -21,8 +21,11 @@ module Middleman
 
       def generate(dir, output_dir, origin, specs)
         specs.each do |name, spec|
-        image = RMagick::new dir.join(origin).to_s
-          image.change_geometry(spec[:dimensions])
+          image = RMagick::new dir.join(origin).to_s
+          image.change_geometry(spec[:dimensions]) do |cols, rows, img|
+            image.resize(cols, rows)
+            image.write output_dir.join(spec[:name])
+          end
         end
       end
     end

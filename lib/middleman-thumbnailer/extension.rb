@@ -12,7 +12,6 @@ module Middleman
           dimensions = options[:dimensions]
 
           dir = Pathname.new(File.join(build_dir, images_dir))
-          prefix = build_dir + File::SEPARATOR
 
           after_build do |builder|
             files = FileList["#{dir}/**/*.{png,jpg,jpeg}*"]
