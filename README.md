@@ -1,4 +1,4 @@
-# middleman-thumbnailer
+# Middleman Thumbnailer
 
 Generate thumbnail versions of your jpeg & png images
 
@@ -24,3 +24,8 @@ And something like this to your `config.rb`:
 If you have a file in images called (for example) background.png, thumbnail versions will be created called:
   background-small-200x.png
   background-medium-400x300.png
+
+
+##Helpers
+
+There is one helper, thumbnail(image, size) which will output the thumbnail name for that image
