@@ -8,9 +8,14 @@ describe ::Middleman::ThumbnailGenerator do
   let(:filename) {'test.jpg'}
   describe "#generate" do
 
-    it "always return the original filename in :original" do 
+    it "should always return the original filename in :original" do 
       dimensions = {:small => '100x100'}
       klass.generate(filename, dimensions).should include(:original => filename)
+    end
+
+    it "should always return the original filename in :original" do 
+      dimensions = {:small => '100x100'}
+      klass.generate(filename, dimensions).should include(:small => 'test-small-100x100.jpg')
     end
   end
 
