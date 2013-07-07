@@ -30,4 +30,4 @@ If the `:include_data_thumbnails` option is set to true, the list of images will
 
 ##Helpers
 
-There is one helper, thumbnail(image, size) which will output the thumbnail name for that image
+There is one helper, `thumbnail(image, size)` which will output the thumbnail name for that image
