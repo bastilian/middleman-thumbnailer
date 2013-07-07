@@ -12,7 +12,7 @@ module Middleman
           prefix = build_dir + File::SEPARATOR
 
           after_build do |builder|
-            files = FileList["#{dir}/**/*.svg*"]
+            files = FileList["#{dir}/**/*.{png,jpg,jpeg}*"]
 
             files.each do |file|
               puts file
