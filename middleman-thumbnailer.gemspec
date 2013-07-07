@@ -2,10 +2,10 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "middleman-thumbnailer/version"
 
-s::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name        = "middleman-thumbnailer"
   s.version     = Middleman::Thumbnailer::VERSION
-  s.platform    = s::Platform::RUBY
+  s.platform    = Gem::Platform::RUBY
   s.authors     = ["Nicholas Hemsley"]
   s.email       = ["nick.hems@gmail.com"]
   s.homepage    = "https://github.com/nhemsley/middleman-thumbnailer"

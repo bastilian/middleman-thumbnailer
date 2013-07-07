@@ -3,8 +3,8 @@ module Middleman
   class ThumbnailGenerator
     class << self
 
-      def generate do |for|
-        
+      def generate(filename, dimensions)
+        {}
       end
     end
   end

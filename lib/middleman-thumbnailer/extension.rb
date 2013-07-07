@@ -1,4 +1,5 @@
 require 'rake'
+
 module Middleman
   module Thumbnailer
     class << self
