@@ -127,8 +127,9 @@ module Middleman
             image = ::Magick::Image.read(original_file).first
             blob = nil
             image.change_geometry(spec[:dimensions]) do |cols, rows, img|
-              image.resize!(cols, rows)
-              blob = image.to_blob
+              img = img.resize(cols, rows)
+              img = img.sharpen(0.5, 0.5)
+              blob = img.to_blob
             end
 
             unless blob.nil?

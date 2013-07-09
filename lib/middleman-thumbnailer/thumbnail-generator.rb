@@ -23,8 +23,9 @@ module Middleman
         specs.each do |name, spec|
           if spec.has_key? :dimensions then
             image.change_geometry(spec[:dimensions]) do |cols, rows, img|
-              image.resize!(cols, rows)
-              image.write File.join(output_dir, spec[:name])
+              img = img.resize(cols, rows)
+              img = img.sharpen(0.5, 0.5)
+              img.write File.join(output_dir, spec[:name])
             end
           end
         end
