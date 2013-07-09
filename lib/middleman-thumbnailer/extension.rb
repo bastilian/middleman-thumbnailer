@@ -10,7 +10,7 @@ module Middleman
 
         options[:filetypes] ||= [:jpg, :jpeg, :png]
         options[:include_data_thumbnails] = false unless options.has_key? :include_data_thumbnails
-
+        options[:namespace_directory] = ["**"] unless options.has_key? :namespace_directory
 
         Thumbnailer.options = options
 
@@ -23,16 +23,18 @@ module Middleman
           options[:source_dir] = source_dir
 
           dimensions = options[:dimensions]
+          namespace = options[:namespace_directory].join(',')
 
-          dir = Pathname.new(File.join(build_dir, images_dir))
+          dir = Pathname.new(File.join(source_dir, images_dir))
 
           after_build do |builder|
-            files = Dir["#{dir}/**/*.{#{options[:filetypes].join(',')}}"]
+            glob = "#{dir}/#{namespace}/*.{#{options[:filetypes].join(',')}}"
+            files = Dir[glob]
 
             files.each do |file|
-
-              specs = ThumbnailGenerator.specs(file, dimensions)
-              ThumbnailGenerator.generate(dir, Pathname.new(build_dir.to_s), file, specs)
+              path = file.gsub(source_dir, '')
+              specs = ThumbnailGenerator.specs(path, dimensions)
+              ThumbnailGenerator.generate(source_dir, File.join(root, build_dir), path, specs)
             end
           end
 
@@ -72,14 +74,17 @@ module Middleman
 
         options = Thumbnailer.options
         dimensions = options[:dimensions]
+        namespace = options[:namespace_directory].join(',')
 
-        files = Dir["#{images_dir_abs}/**/*.{#{options[:filetypes].join(',')}}"]
+        files = Dir["#{images_dir_abs}/#{namespace}/*.{#{options[:filetypes].join(',')}}"]
 
         resource_list = files.map do |file|
-          specs = ThumbnailGenerator.specs(file, dimensions)
+          path = file.gsub(@app.source_dir, '')
+          specs = ThumbnailGenerator.specs(path, dimensions)
           specs.map do |name, spec|
             resource = nil
-            resource = Middleman::Sitemap::Resource.new(@app.sitemap, File.join(@app.images_dir, spec[:name]), file) unless name == :original
+            # puts "#{path}: #{spec[:name]}: #{file}"
+            resource = Middleman::Sitemap::Resource.new(@app.sitemap, spec[:name], file) unless name == :original
           end
         end.flatten.reject {|resource| resource.nil? }
 

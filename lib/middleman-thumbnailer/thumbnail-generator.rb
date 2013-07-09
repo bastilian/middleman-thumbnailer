@@ -18,13 +18,13 @@ module Middleman
         ret
       end
 
-      def generate(dir, output_dir, origin, specs)
-        image = ::Magick::Image.read(origin).first
+      def generate(source_dir, output_dir, origin, specs)
+        image = ::Magick::Image.read(File.join(source_dir, origin)).first
         specs.each do |name, spec|
           if spec.has_key? :dimensions then
             image.change_geometry(spec[:dimensions]) do |cols, rows, img|
               image.resize!(cols, rows)
-              image.write spec[:name]
+              image.write File.join(output_dir, spec[:name])
             end
           end
         end
