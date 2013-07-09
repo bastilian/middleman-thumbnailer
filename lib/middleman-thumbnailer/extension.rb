@@ -79,7 +79,7 @@ module Middleman
           specs = ThumbnailGenerator.specs(file, dimensions)
           specs.map do |name, spec|
             resource = nil
-            resource = Middleman::Sitemap::Resource.new(@app.sitemap, File.join(@app.images_dir, spec[:name])) unless name == :original
+            resource = Middleman::Sitemap::Resource.new(@app.sitemap, File.join(@app.images_dir, spec[:name]), file) unless name == :original
           end
         end.flatten.reject {|resource| resource.nil? }
 
