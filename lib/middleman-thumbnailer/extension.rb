@@ -127,6 +127,7 @@ module Middleman
             end
 
             unless blob.nil?
+              status = 200
               headers["Content-Length"] = ::Rack::Utils.bytesize(blob).to_s
               headers["Content-Type"] = image.mime_type
               response = [blob]
