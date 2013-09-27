@@ -18,18 +18,21 @@ module Middleman
         ret
       end
 
-      def generate(dir, output_dir, origin, specs)
+      def generate(source_dir, output_dir, origin, specs)
         image = nil
+        origin_absolute = Path.join source_dir, origin
         specs.each do |name, spec|
           if spec.has_key? :dimensions then
-            origin_mtime = File.mtime(origin)
+            origin_mtime = File.mtime origin_absolute
             if origin_mtime != File.mtime(spec[:name])
-              image ||= ::Magick::Image.read(origin).first
+              image ||= ::Magick::Image.read(origin_absolute).first
+              thumbnail_absolute = File.join output_dir, spec[:name]
               image.change_geometry(spec[:dimensions]) do |cols, rows, img|
-                image.resize!(cols, rows)
-                image.write spec[:name]
+                img = img.resize(cols, rows)
+                img = img.sharpen(0.5, 0.5)
+                img.write thumbnail_absolute
               end
-              File.utime(origin_mtime, origin_mtime, spec[:name])
+              File.utime(origin_mtime, origin_mtime, thumbnail_absolute)
             end
           end
         end
