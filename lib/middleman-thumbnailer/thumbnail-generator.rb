@@ -19,12 +19,17 @@ module Middleman
       end
 
       def generate(dir, output_dir, origin, specs)
-        image = ::Magick::Image.read(origin).first
+        image = nil
         specs.each do |name, spec|
           if spec.has_key? :dimensions then
-            image.change_geometry(spec[:dimensions]) do |cols, rows, img|
-              image.resize!(cols, rows)
-              image.write spec[:name]
+            origin_mtime = File.mtime(origin)
+            if origin_mtime != File.mtime(spec[:name])
+              image ||= ::Magick::Image.read(origin).first
+              image.change_geometry(spec[:dimensions]) do |cols, rows, img|
+                image.resize!(cols, rows)
+                image.write spec[:name]
+              end
+              File.utime(origin_mtime, origin_mtime, spec[:name])
             end
           end
         end
