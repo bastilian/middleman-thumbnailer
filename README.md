@@ -13,21 +13,28 @@ gem 'middleman-thumbnailer', :git => 'git://github.com/nhemsley/middleman-thumbn
 And something like this to your `config.rb`:
 
 ```ruby
-  require "middleman-thumbnailer"
+  require 'middleman-thumbnailer'
   activate :thumbnailer, 
     :dimensions => {
       :small => '200x',
       :medium => '400x300'
     },
     :include_data_thumbnails => true
+    :namespace_directory => %w(gallery)
 ```
 
 If you have a file in images called (for example) background.png, thumbnail versions will be created called:
   background-small-200x.png
   background-medium-400x300.png
 
-If the `:include_data_thumbnails` option is set to true, the list of images will be shown for each image displayed with the `thumbnail` helper
+## Config Options
+
+`:include_data_thumbnails` the list of images will be included in the data-thumbnails attribute for each image displayed with the `thumbnail` helper
+
+`:namespace_directory` only thumbnail images found within this directory (_within_ the images directory of course)
+
 
 ##Helpers
 
-There is one helper, `thumbnail(image, size)` which will output the thumbnail name for that image
+`thumbnail(image, size, [html_options])` will return the thumbnail image tag for the image of the named dimension/size
+`thumbnail_url(image, size)` will return the url for the image of the named dimension/size
