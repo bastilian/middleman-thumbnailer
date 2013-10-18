@@ -37,4 +37,5 @@ If you have a file in images called (for example) background.png, thumbnail vers
 ##Helpers
 
 `thumbnail(image, size, [html_options])` will return the thumbnail image tag for the image of the named dimension/size
+
 `thumbnail_url(image, size)` will return the url for the image of the named dimension/size
