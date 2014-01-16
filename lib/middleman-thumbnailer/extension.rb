@@ -89,7 +89,7 @@ module Middleman
         files = Dir["#{images_dir_abs}/#{namespace}/*.{#{options[:filetypes].join(',')}}"]
 
         resource_list = files.map do |file|
-          path = file.gsub(@app.source_dir, '')
+          path = file.gsub(@app.source_dir + File::SEPARATOR, '')
           specs = ThumbnailGenerator.specs(path, dimensions)
           specs.map do |name, spec|
             resource = nil
