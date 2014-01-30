@@ -20,7 +20,7 @@ module Middleman
 
       def generate(source_dir, output_dir, origin, specs)
         image = nil
-        origin_absolute = Path.join source_dir, origin
+        origin_absolute = File.join source_dir, origin
         specs.each do |name, spec|
           if spec.has_key? :dimensions then
             origin_mtime = File.mtime origin_absolute
