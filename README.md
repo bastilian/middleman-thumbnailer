@@ -19,7 +19,7 @@ And something like this to your `config.rb`:
       :small => '200x',
       :medium => '400x300'
     },
-    :include_data_thumbnails => true
+    :include_data_thumbnails => true,
     :namespace_directory => %w(gallery)
 ```
 
