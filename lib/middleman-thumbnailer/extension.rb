@@ -18,6 +18,8 @@ module Middleman
 
         app.after_configuration do
 
+          options[:build_dir] = build_dir
+
           #stash the source images dir in options for the Rack middleware
           options[:images_source_dir] = File.join(source_dir, images_dir)
           options[:source_dir] = source_dir
@@ -27,15 +29,13 @@ module Middleman
 
           dir = Pathname.new(File.join(source_dir, images_dir))
 
-          after_build do |builder|
-            glob = "#{dir}/#{namespace}/*.{#{options[:filetypes].join(',')}}"
-            files = Dir[glob]
+          glob = "#{dir}/#{namespace}/*.{#{options[:filetypes].join(',')}}"
+          files = Dir[glob]
 
-            files.each do |file|
-              path = file.gsub(source_dir, '')
-              specs = ThumbnailGenerator.specs(path, dimensions)
-              ThumbnailGenerator.generate(source_dir, File.join(root, build_dir), path, specs)
-            end
+          files.each do |file|
+            path = file.gsub(source_dir, '')
+            specs = ThumbnailGenerator.specs(path, dimensions)
+            ThumbnailGenerator.generate(source_dir, File.join(root, build_dir), path, specs)
           end
 
           sitemap.register_resource_list_manipulator(:thumbnailer, SitemapExtension.new(self), true)
@@ -93,8 +93,7 @@ module Middleman
           specs = ThumbnailGenerator.specs(path, dimensions)
           specs.map do |name, spec|
             resource = nil
-            # puts "#{path}: #{spec[:name]}: #{file}"
-            resource = Middleman::Sitemap::Resource.new(@app.sitemap, spec[:name], file) unless name == :original
+            resource = Middleman::Sitemap::Resource.new(@app.sitemap, spec[:name], File.join(options[:build_dir], spec[:name])) unless name == :original
           end
         end.flatten.reject {|resource| resource.nil? }
 

@@ -25,7 +25,8 @@ module Middleman
             image.change_geometry(spec[:dimensions]) do |cols, rows, img|
               img = img.resize(cols, rows)
               img = img.sharpen(0.5, 0.5)
-              img.write File.join(output_dir, spec[:name])
+              output_file = File.join(output_dir, spec[:name])
+              img.write output_file
             end
           end
         end
