@@ -19,19 +19,41 @@ module Middleman
       end
 
       def generate(source_dir, output_dir, origin, specs)
-        image = ::Magick::Image.read(File.join(source_dir, origin)).first
+        origin_absolute = File.join(source_dir, origin)
+        yield_images(origin_absolute, specs) do |img, spec|
+          output_file = File.join(output_dir, spec[:name])
+          img.write output_file
+        end
+      end
+
+      def yield_images(origin, specs)
+        image = ::Magick::Image.read(origin).first
         specs.each do |name, spec|
           if spec.has_key? :dimensions then
             image.change_geometry(spec[:dimensions]) do |cols, rows, img|
               img = img.resize(cols, rows)
               img = img.sharpen(0.5, 0.5)
-              output_file = File.join(output_dir, spec[:name])
-              img.write output_file
+              yield img, spec
             end
           end
         end
       end
 
+      def image_for_spec(origin, spec)
+        image = ::Magick::Image.read(origin).first
+
+        if spec.has_key? :dimensions then
+          image.change_geometry(spec[:dimensions]) do |cols, rows, img|
+            img = img.resize(cols, rows)
+            img = img.sharpen(0.5, 0.5)
+            return img
+          end 
+        end
+        return image
+      end
+
+
+      #This returns a reverse mapping from a thumbnail's filename to the original filename, and the thumbnail's specs
       def original_map_for_files(files, specs)
         map = files.inject({}) do |memo, file|
           generated_specs = self.specs(file, specs)

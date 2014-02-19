@@ -99,6 +99,7 @@ module Middleman
 
         resources + resource_list
       end
+
     end
 
 
@@ -126,28 +127,17 @@ module Middleman
 
         path = env["PATH_INFO"]
 
-        path_on_disk = File.join(@options[:source_dir], path)
+        absolute_path = File.join(@options[:source_dir], path)
 
         #TODO: caching
-        if original_specs = @original_map[path_on_disk]
+        if original_specs = @original_map[absolute_path]
           original_file = original_specs[:original]
-          spec = original_specs[:spec]
-          if spec.has_key? :dimensions
-            image = ::Magick::Image.read(original_file).first
-            blob = nil
-            image.change_geometry(spec[:dimensions]) do |cols, rows, img|
-              img = img.resize(cols, rows)
-              img = img.sharpen(0.5, 0.5)
-              blob = img.to_blob
-            end
-
-            unless blob.nil?
-              status = 200
-              headers["Content-Length"] = ::Rack::Utils.bytesize(blob).to_s
-              headers["Content-Type"] = image.mime_type
-              response = [blob]
-            end
-          end
+          image = ThumbnailGenerator.image_for_spec(original_file, original_specs[:spec])
+          blob = image.to_blob
+          status = 200
+          headers["Content-Length"] = ::Rack::Utils.bytesize(blob).to_s
+          headers["Content-Type"] = image.mime_type
+          response = [blob]
         end
 
         [status, headers, response]
