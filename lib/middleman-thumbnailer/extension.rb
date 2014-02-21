@@ -27,15 +27,17 @@ module Middleman
           dimensions = options[:dimensions]
           namespace = options[:namespace_directory].join(',')
 
-          dir = Pathname.new(File.join(source_dir, images_dir))
+          app.after_build do
+            dir = File.join(source_dir, images_dir)
 
-          glob = "#{dir}/#{namespace}/*.{#{options[:filetypes].join(',')}}"
-          files = Dir[glob]
+            glob = "#{dir}/#{namespace}/*.{#{options[:filetypes].join(',')}}"
+            files = Dir[glob]
 
-          files.each do |file|
-            path = file.gsub(source_dir, '')
-            specs = ThumbnailGenerator.specs(path, dimensions)
-            ThumbnailGenerator.generate(source_dir, File.join(root, build_dir), path, specs)
+            files.each do |file|
+              path = file.gsub(source_dir, '')
+              specs = ThumbnailGenerator.specs(path, dimensions)
+              ThumbnailGenerator.generate(source_dir, File.join(root, build_dir), path, specs)
+            end
           end
 
           sitemap.register_resource_list_manipulator(:thumbnailer, SitemapExtension.new(self), true)
