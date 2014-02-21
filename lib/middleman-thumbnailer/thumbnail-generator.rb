@@ -20,10 +20,15 @@ module Middleman
 
       def generate(source_dir, output_dir, origin, specs)
         origin_absolute = File.join(source_dir, origin)
+        binding.pry
         yield_images(origin_absolute, specs) do |img, spec|
           output_file = File.join(output_dir, spec[:name])
-          img.write output_file
-        end
+          origin_mtime = File.mtime origin_absolute
+          if !File.exist?(output_file) || origin_mtime != File.mtime(output_file) then
+            img.write output_file 
+          end
+          File.utime(origin_mtime, origin_mtime, output_file)
+       end
       end
 
       def yield_images(origin, specs)
