@@ -2,6 +2,13 @@
 
 Generate thumbnail versions of your jpeg & png images
 
+
+## Important Note
+
+middleman-thumbnailer will only (currently) work with the master branch of middleman (or at least this commit: https://github.com/middleman/middleman/commit/049866ee2e74972292687a7d1dff0e69f942f83a). Sorry, I just did a bunch of debugging of strange behavior & realized I need a before_hook...
+
+Once middleman 3.2.3 is out, it should be all good!
+
 ## Installation
 
 Add this line to your `Gemfile`:
