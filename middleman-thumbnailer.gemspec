@@ -21,8 +21,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("rmagick", ["~> 2.13.0"])
 
   s.add_development_dependency 'pry'
-  s.add_development_dependency 'pry-nav'
-  s.add_development_dependency 'pry-rescue'
-  s.add_development_dependency 'pry-stack_explorer'
+  s.add_development_dependency 'pry-plus'
   s.add_development_dependency 'rspec'
 end
