@@ -27,7 +27,7 @@ module Middleman
           dimensions = options[:dimensions]
           namespace = options[:namespace_directory].join(',')
 
-          app.after_build do
+          app.before_build do
             dir = File.join(source_dir, images_dir)
 
             glob = "#{dir}/#{namespace}/*.{#{options[:filetypes].join(',')}}"
