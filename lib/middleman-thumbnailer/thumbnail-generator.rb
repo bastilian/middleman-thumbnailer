@@ -1,4 +1,5 @@
 require 'RMagick'
+require 'fileutils'
 
 module Middleman
   #actually creates the thumbnail names
@@ -20,11 +21,15 @@ module Middleman
 
       def generate(source_dir, output_dir, origin, specs)
         origin_absolute = File.join(source_dir, origin)
-        binding.pry
         yield_images(origin_absolute, specs) do |img, spec|
           output_file = File.join(output_dir, spec[:name])
           origin_mtime = File.mtime origin_absolute
+          #FIXME: this sucks & I should be shot, however in before_build, we havend created the build dir
+          # therefor we will have to create it here
+          output_file_immediate_dir = File.dirname output_file
+          FileUtils.mkdir_p output_file_immediate_dir unless Dir.exist? output_file_immediate_dir
           if !File.exist?(output_file) || origin_mtime != File.mtime(output_file) then
+            #puts "writing #{output_file}"
             img.write output_file 
           end
           File.utime(origin_mtime, origin_mtime, output_file)
