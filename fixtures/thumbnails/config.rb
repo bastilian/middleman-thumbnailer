@@ -48,7 +48,7 @@
 activate :thumbnailer, 
   :dimensions => {
     :small => '200x',
-    :medium => '400x300'
+    :medium => 'x300'
   }
   
 set :css_dir, 'stylesheets'
