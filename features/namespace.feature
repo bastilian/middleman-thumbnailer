@@ -5,6 +5,8 @@ Feature: Namespacing
     Then the following files should exist:
       | images/background.png |
       | images/middleman.png |
+      | images/test/background-medium-x300.png | 
+      | images/test/background-small-200x.png |
 
     Then the following files should not exist:
       | images/background-medium-x300.png |
