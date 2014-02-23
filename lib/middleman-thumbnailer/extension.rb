@@ -25,13 +25,13 @@ module Middleman
           options[:source_dir] = source_dir
 
           dimensions = options[:dimensions]
-          namespace = options[:namespace_directory].join(',')
+          namespace = options[:namespace_directory]
 
           app.before_build do
             dir = File.join(source_dir, images_dir)
 
-            glob = "#{dir}/#{namespace}/*.{#{options[:filetypes].join(',')}}"
-            files = Dir[glob]
+
+            files = DirGlob.glob(dir, namespace, options[:filetypes])
 
             files.each do |file|
               path = file.gsub(source_dir, '')
@@ -72,6 +72,12 @@ module Middleman
       end
     end
 
+    class DirGlob
+      def self.glob(root, namespaces, filetypes)
+        Dir["#{root}/#{namespaces.join(',')}/*.{#{filetypes.join(',')}}"]
+      end
+    end
+
     class SitemapExtension
       def initialize(app)
         @app = app
@@ -88,7 +94,7 @@ module Middleman
         dimensions = options[:dimensions]
         namespace = options[:namespace_directory].join(',')
 
-        files = Dir["#{images_dir_abs}/#{namespace}/*.{#{options[:filetypes].join(',')}}"]
+        files = DirGlob.glob(images_dir_abs, options[:namespace_directory], options[:filetypes])
 
         resource_list = files.map do |file|
           path = file.gsub(@app.source_dir + File::SEPARATOR, '')
@@ -115,7 +121,7 @@ module Middleman
         @app = app
         @options = options
 
-        files = Dir["#{options[:images_source_dir]}/**/*.{#{options[:filetypes].join(',')}}"]
+        files = DirGlob.glob(options[:images_source_dir], options[:namespace_directory], options[:filetypes])
 
         @original_map = ThumbnailGenerator.original_map_for_files(files, options[:dimensions])
 
