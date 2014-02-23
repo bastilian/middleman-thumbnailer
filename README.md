@@ -2,12 +2,22 @@
 
 Generate thumbnail versions of your jpeg & png images
 
+
+## Important Note
+
+middleman-thumbnailer will only (currently) work with the latest v3-stable branch of middleman. In your Gemfile use this (for now): 
+
+```ruby
+gem 'middleman', :git => 'https://github.com/middleman/middleman.git', branch: 'v3-stable'
+```
+
+
 ## Installation
 
 Add this line to your `Gemfile`:
 
 ```ruby
-gem 'middleman-thumbnailer', :git => 'git://github.com/nhemsley/middleman-thumbnailer.git'
+gem 'middleman-thumbnailer', :git => 'https://github.com/nhemsley/middleman-thumbnailer.git'
 ```
 
 And something like this to your `config.rb`:
