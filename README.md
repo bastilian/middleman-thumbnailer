@@ -7,7 +7,10 @@ Generate thumbnail versions of your jpeg & png images
 
 If you bundle update, you will probably get the following error: 
 
-/middleman-core-3.2.2/lib/middleman-core/configuration.rb:37:in \`method_missing': undefined method \`before_build' for Middleman::Application::MiddlemanApplication1:Class (NoMethodError)
+```stacktrace
+/middleman-core-3.2.2/lib/middleman-core/configuration.rb:37:in \`method_missing': 
+undefined method \`before_build' for Middleman::Application::MiddlemanApplication1:Class (NoMethodError)
+```
 
 middleman-thumbnailer will only (currently) work with the latest v3-stable branch of middleman from git. In your Gemfile use this (for now): 
 
