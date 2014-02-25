@@ -15,6 +15,6 @@ group :development, :test do
   gem "builder",  "~> 3.0.0"
   gem "erubis"
 
-  gem "pry"
-  gem "pry-plus", git: 'git@github.com:nhemsley/pry-plus.git'
+  # gem "pry"
+  # gem "pry-plus", git: 'git@github.com:nhemsley/pry-plus.git'
 end
