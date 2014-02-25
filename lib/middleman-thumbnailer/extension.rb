@@ -74,7 +74,7 @@ module Middleman
 
     class DirGlob
       def self.glob(root, namespaces, filetypes)
-        Dir["#{root}/#{namespaces.join(',')}/*.{#{filetypes.join(',')}}"]
+        Dir["#{root}/#{namespaces.join(',')}/**/*.{#{filetypes.join(',')}}"]
       end
     end
 
