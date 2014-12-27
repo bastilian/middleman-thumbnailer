@@ -2,6 +2,12 @@
 
 Generate thumbnail versions of your jpeg & png images
 
+## Performance Issues
+
+While I had hopes for the efficacy of the code (read: I didn't really think about it, as I was working on a small site that needed thumbnails), there are a few issues with using middleman thumbnailer on _large_ sets of images:
+
+* the ruby interpreter: doing any heavy lifting with ruby is, you know, prone to taking a long time
+* apparently RMagick does not report (or cannot via gc mechnisms) it's memory usage properly, therefore GC does not run enough, and your middleman server & build process can get very big.
 
 ## Important Note
 
