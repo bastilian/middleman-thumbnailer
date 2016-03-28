@@ -45,5 +45,5 @@ Then (/^I should be able to update an image "(.*?)" and the thumbnails regenerat
   step %Q{I run `middleman build`}
   thumbnail_path = File.join(Dir.pwd, thumbnail_paths[:small][:name])
   new_mtime = File.mtime(thumbnail_path)
-  new_mtime.should == updated_mtime
+  expect(new_mtime.sec).to be(updated_mtime.sec)
 end
