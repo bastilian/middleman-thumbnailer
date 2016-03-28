@@ -29,8 +29,7 @@ module Middleman
           output_file_immediate_dir = File.dirname output_file
           FileUtils.mkdir_p output_file_immediate_dir unless Dir.exist? output_file_immediate_dir
           if !File.exist?(output_file) || origin_mtime != File.mtime(output_file) then
-            #puts "writing #{output_file}"
-            img.write output_file 
+            img.write output_file
           end
           File.utime(origin_mtime, origin_mtime, output_file)
        end
@@ -57,7 +56,7 @@ module Middleman
             img = img.resize(cols, rows)
             img = img.sharpen(0.5, 0.5)
             return img
-          end 
+          end
         end
         return image
       end

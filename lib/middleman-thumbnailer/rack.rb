@@ -3,17 +3,11 @@ module Middleman
     # Rack middleware to convert images on the fly
     class Rack
 
-      # Init
-      # @param [Class] app
-      # @param [Hash] options
-      def initialize(app, options={})
+      def initialize(app, options = {})
         @app = app
         @options = options
-
         files = DirGlob.glob(options[:images_source_dir], options[:namespace_directory], options[:filetypes])
-
         @original_map = ThumbnailGenerator.original_map_for_files(files, options[:dimensions])
-
       end
 
       # Rack interface
@@ -21,13 +15,9 @@ module Middleman
       # @return [Array]
       def call(env)
         status, headers, response = @app.call(env)
-
-        path = env["PATH_INFO"]
-
+        path = env['PATH_INFO']
         absolute_path = File.join(@options[:source_dir], path)
-
-        root_dir =  @options[:middleman_app].root
-
+        root_dir = @options.root
         tmp_dir = File.join(root_dir, 'tmp', 'middleman-thumbnail-cache')
 
         if original_specs = @original_map[absolute_path]

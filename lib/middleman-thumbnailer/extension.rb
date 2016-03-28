@@ -8,51 +8,43 @@ require 'middleman-thumbnailer/rack'
 
 module Middleman
   module Thumbnailer
-    class << self
-      attr_accessor :options
+    class Extension < Middleman::Extension
+      helpers Helpers
 
-      def registered(app, options={})
+      option :dimensions
+      option :namespace_directory, ['**']
+      option :filetypes, [:jpg, :jpeg, :png]
+      option :include_data_thumbnails, false
+      option :images_source_dir
+      option :source_dir
+      option :root
 
-        options[:filetypes] ||= [:jpg, :jpeg, :png]
-        options[:include_data_thumbnails] = false unless options.has_key? :include_data_thumbnails
-        options[:namespace_directory] = ["**"] unless options.has_key? :namespace_directory
+      def after_configuration
+        # stash the source images dir in options for the Rack middleware
+        options[:images_source_dir] = File.join(app.source_dir, app.images_dir)
+        options[:source_dir] = app.source_dir
+        options[:root] = app.root
 
-        Thumbnailer.options = options
+        app.sitemap.register_resource_list_manipulator(:thumbnailer, SitemapExtension.new(self), true)
 
-        app.helpers Helpers
+        app.use Rack, options
+      end
 
-        options[:middleman_app] = app
+      def directory
+        @dir ||= File.join(app.source_dir, app.images_dir)
+      end
 
-        app.after_configuration do
+      def files
+        @files ||= DirGlob.glob(directory, options[:namespace_directory], options[:filetypes])
+      end
 
-          options[:build_dir] = build_dir
-
-          #stash the source images dir in options for the Rack middleware
-          options[:images_source_dir] = File.join(source_dir, images_dir)
-          options[:source_dir] = source_dir
-
-          dimensions = options[:dimensions]
-          namespace = options[:namespace_directory]
-
-          app.before_build do
-            dir = File.join(source_dir, images_dir)
-
-
-            files = DirGlob.glob(dir, namespace, options[:filetypes])
-
-            files.each do |file|
-              path = file.gsub(source_dir, '')
-              specs = ThumbnailGenerator.specs(path, dimensions)
-              ThumbnailGenerator.generate(source_dir, File.join(root, build_dir), path, specs)
-            end
-          end
-
-          sitemap.register_resource_list_manipulator(:thumbnailer, SitemapExtension.new(self), true)
-
-          app.use Rack, options
+      def before_build
+        files.each do |file|
+          path = file.gsub(app.source_dir, '')
+          specs = ThumbnailGenerator.specs(path, options[:dimensions])
+          ThumbnailGenerator.generate(app.source_dir, File.join(app.root, app.build_dir), path, specs)
         end
       end
-      alias :included :registered
     end
 
     class DirGlob

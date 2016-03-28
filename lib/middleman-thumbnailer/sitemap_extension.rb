@@ -2,28 +2,28 @@ module Middleman
   module Thumbnailer
     # Add sitemap resource for every image in the sprockets load path
     class SitemapExtension
-      def initialize(app)
-        @app = app
+      attr_accessor :thumbnailer,
+                    :app
+
+      def initialize(thumbnailer)
+        self.thumbnailer = thumbnailer
+        self.app = thumbnailer.app
       end
 
       def manipulate_resource_list(resources)
-
-        images_dir_abs = File.join(@app.source_dir, @app.images_dir)
-
-        images_dir = @app.images_dir
-
-        options = Thumbnailer.options
+        images_dir_abs = File.join(app.source_dir, app.images_dir)
+        options = thumbnailer.options
         dimensions = options[:dimensions]
-        namespace = options[:namespace_directory].join(',')
 
-        files = DirGlob.glob(images_dir_abs, options[:namespace_directory], options[:filetypes])
+        files = DirGlob.glob(images_dir_abs, options.namespace_directory, options[:filetypes])
 
         resource_list = files.map do |file|
-          path = file.gsub(@app.source_dir + File::SEPARATOR, '')
+          path = file.gsub(app.source_dir + File::SEPARATOR, '')
           specs = ThumbnailGenerator.specs(path, dimensions)
           specs.map do |name, spec|
-            resource = nil
-            resource = Middleman::Sitemap::Resource.new(@app.sitemap, spec[:name], File.join(options[:build_dir], spec[:name])) unless name == :original
+            unless name == :original
+              Middleman::Sitemap::Resource.new(app.sitemap, spec[:name], File.join(app.build_dir, spec[:name]))
+            end
           end
         end.flatten.reject {|resource| resource.nil? }
 
