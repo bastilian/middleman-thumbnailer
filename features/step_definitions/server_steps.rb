@@ -5,13 +5,15 @@ require 'middleman-thumbnailer/thumbnail-generator'
 Then(/^the image "(.*?)" should have width of "([0-9]*?)"$/) do |path, width|
   full_path = File.join(expand_path("."), path)
   image = ::Magick::Image.read(full_path).first
-  image.columns.should == width.to_i
+
+  expect(image.columns).to eq(width.to_i)
 end
 
 Then(/^the image "(.*?)" should have height of "(.*?)"$/) do |path, height|
   full_path = File.join(expand_path("."), path)
   image = ::Magick::Image.read(full_path).first
-  image.rows.should == height.to_i
+
+  expect(image.rows).to eq(height.to_i)
 end
 
 Then (/^I should be able to rebuild "(.*?)" and the thumbnails do not regenerate$/) do |path|
@@ -27,7 +29,8 @@ Then (/^I should be able to rebuild "(.*?)" and the thumbnails do not regenerate
   sleep 1
   step %Q{I run `middleman build`}
   new_mtime = File.mtime(thumbnail_path)
-  new_mtime.should == current_mtime
+
+  expect(new_mtime).to eq(current_mtime)
 end
 
 Then (/^I should be able to update an image "(.*?)" and the thumbnails regenerate$/) do |path|
@@ -45,5 +48,6 @@ Then (/^I should be able to update an image "(.*?)" and the thumbnails regenerat
   step %Q{I run `middleman build`}
   thumbnail_path = thumbnail_paths[:small][:name]
   new_mtime = File.mtime(thumbnail_path)
-  expect(new_mtime.sec).to be(updated_mtime.sec)
+
+  expect(new_mtime.sec).to eq(updated_mtime.sec)
 end
