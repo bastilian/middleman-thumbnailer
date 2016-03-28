@@ -2,6 +2,7 @@ require 'fileutils'
 require 'mime-types'
 
 require 'middleman-thumbnailer/thumbnail-generator'
+require 'middleman-thumbnailer/sitemap_extension'
 
 module Middleman
   module Thumbnailer
@@ -85,39 +86,6 @@ module Middleman
       end
     end
 
-    class SitemapExtension
-      def initialize(app)
-        @app = app
-      end
-
-      # Add sitemap resource for every image in the sprockets load path
-      def manipulate_resource_list(resources)
-
-        images_dir_abs = File.join(@app.source_dir, @app.images_dir)
-
-        images_dir = @app.images_dir
-
-        options = Thumbnailer.options
-        dimensions = options[:dimensions]
-        namespace = options[:namespace_directory].join(',')
-
-        files = DirGlob.glob(images_dir_abs, options[:namespace_directory], options[:filetypes])
-
-        resource_list = files.map do |file|
-          path = file.gsub(@app.source_dir + File::SEPARATOR, '')
-          specs = ThumbnailGenerator.specs(path, dimensions)
-          specs.map do |name, spec|
-            resource = nil
-            resource = Middleman::Sitemap::Resource.new(@app.sitemap, spec[:name], File.join(options[:build_dir], spec[:name])) unless name == :original
-          end
-        end.flatten.reject {|resource| resource.nil? }
-
-        resources + resource_list
-      end
-
-    end
-
-
     # Rack middleware to convert images on the fly
     class Rack
 
@@ -144,7 +112,7 @@ module Middleman
 
         absolute_path = File.join(@options[:source_dir], path)
 
-        root_dir =  @options[:middleman_app].root 
+        root_dir =  @options[:middleman_app].root
 
         tmp_dir = File.join(root_dir, 'tmp', 'middleman-thumbnail-cache')
 
