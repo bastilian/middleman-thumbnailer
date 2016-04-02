@@ -1,8 +1,4 @@
-require 'fileutils'
-require 'mime-types'
-
-require 'middleman-thumbnailer/thumbnail-generator'
-require 'middleman-thumbnailer/sitemap_extension'
+require 'middleman-thumbnailer/thumbnails'
 require 'middleman-thumbnailer/helpers'
 require 'middleman-thumbnailer/rack'
 
@@ -25,8 +21,6 @@ module Middleman
         options[:source_dir] = app.source_dir
         options[:root] = app.root
 
-        app.sitemap.register_resource_list_manipulator(:thumbnailer, SitemapExtension.new(self), true)
-
         app.use Rack, options
       end
 
@@ -34,24 +28,23 @@ module Middleman
         @dir ||= File.join(app.source_dir, app.images_dir)
       end
 
-      def files
-        @files ||= DirGlob.glob(directory, options[:namespace_directory], options[:filetypes])
+      def manipulate_resource_list(resources)
+        thumbnails.assets.map do |asset|
+          new_files = asset.paths.reject { |name, _| name == :original }
+          new_files.map do |name, path|
+            resources << Middleman::Sitemap::Resource.new(app.sitemap, name, path)
+          end
+        end
+
+        resources
+      end
+
+      def thumbnails
+        @thumbnails ||= Thumbnailer::Thumbnails.new(self, directory)
       end
 
       def before_build
-        files.each do |file|
-          path = file.gsub(app.source_dir, '')
-          specs = ThumbnailGenerator.specs(path, options[:dimensions])
-          ThumbnailGenerator.generate(app.source_dir, File.join(app.root, app.build_dir), path, specs)
-        end
-      end
-    end
-
-    class DirGlob
-      def self.glob(root, namespaces, filetypes)
-        filetypes_with_capitals = filetypes.reduce([]) { |memo, file| memo.concat [file, file.upcase] }
-        glob_str = "#{root}/{#{namespaces.join(',')}}/**/*.{#{filetypes_with_capitals.join(',')}}"
-        Dir[glob_str]
+        thumbnails.build
       end
     end
   end
