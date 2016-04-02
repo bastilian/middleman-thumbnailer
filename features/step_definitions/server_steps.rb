@@ -33,21 +33,19 @@ Then (/^I should be able to rebuild "(.*?)" and the thumbnails do not regenerate
   expect(new_mtime).to eq(current_mtime)
 end
 
-Then (/^I should be able to update an image "(.*?)" and the thumbnails regenerate$/) do |path|
-  source_path = File.join(expand_path("."), 'source', path)
-  image_path = File.join(expand_path("."), 'build', path)
+Then(/^I should be able to update an image "(.*?)" and the thumbnails regenerate$/) do |path|
+  source_path = File.join(expand_path('.'), 'source', path)
+  image_path = File.join(expand_path('.'), 'build', path)
   specs =  {
-    :small => '200x',
-    :medium => 'x300'
+    small: '200x',
+    medium: 'x300'
   }
-  thumbnail_paths = ::Middleman::ThumbnailGenerator.specs(image_path, specs)
-  original_mtime = File.mtime(image_path)
-  sleep 1
-  updated_mtime = Time.now
-  File.utime(updated_mtime, updated_mtime, source_path)
-  step %Q{I run `middleman build`}
-  thumbnail_path = thumbnail_paths[:small][:name]
-  new_mtime = File.mtime(thumbnail_path)
 
-  expect(new_mtime.sec).to eq(updated_mtime.sec)
+  updated_mtime = Time.now
+  file = File.new(::Middleman::ThumbnailGenerator.specs(image_path, specs)[:small][:name])
+
+  expect do
+    File.utime(updated_mtime, updated_mtime, source_path)
+    step 'I run `middleman build`'
+  end.to change(file, :mtime)
 end
