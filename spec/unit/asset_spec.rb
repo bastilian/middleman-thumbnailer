@@ -28,6 +28,12 @@ describe Middleman::Thumbnailer::Asset do
 
   subject { Middleman::Thumbnailer::Asset.new(collection, file) }
 
+  describe '#image' do
+    it 'is a rmagick image' do
+      expect(subject.image.class).to eq(Magick::Image)
+    end
+  end
+
   describe '#directory' do
     it 'returns the file\'s dirname' do
       expect(subject.directory).to eq(File.dirname(subject.file))
