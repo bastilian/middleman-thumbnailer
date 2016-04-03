@@ -3,7 +3,6 @@ require 'RMagick'
 module Middleman
   module Thumbnailer
     class Asset
-      attr_reader :path
       attr_accessor :options,
                     :file,
                     :collection
