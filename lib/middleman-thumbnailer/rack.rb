@@ -1,4 +1,6 @@
 require 'middleman-thumbnailer/thumbnail-generator'
+require 'rack/utils'
+require 'mime-types'
 
 module Middleman
   module Thumbnailer
