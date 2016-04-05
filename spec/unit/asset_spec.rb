@@ -34,6 +34,12 @@ describe Middleman::Thumbnailer::Asset do
     end
   end
 
+  describe '#image_for' do
+    it 'yieds an Magick::Image' do
+      expect { |b| subject.yield_once_with(:image_for, :small, &b).to yield_with_args(Magick::Image) }
+    end
+  end
+
   describe '#directory' do
     it 'returns the file\'s dirname' do
       expect(subject.directory).to eq(File.dirname(subject.file))

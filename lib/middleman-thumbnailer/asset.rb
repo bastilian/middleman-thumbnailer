@@ -13,8 +13,23 @@ module Middleman
         self.file = file
       end
 
+      # Returns and Magick::Image instance of the original image file
+      #
       def image
         @image ||= ::Magick::Image.read(file).first
+      end
+
+      # Yields and Magick::Image
+      #
+      # @param name Symbol
+      #
+      def image_for(name)
+        dimensions = options.dimensions[name]
+        image.change_geometry(dimensions) do |cols, rows, img|
+          img = img.resize(cols, rows)
+          img = img.sharpen(0.5, 0.5)
+          yield img
+        end
       end
 
       def directory
@@ -60,16 +75,14 @@ module Middleman
       def build
         FileUtils.mkdir_p build_directory unless Dir.exist? build_directory
 
-        specs.each do |_, spec|
+        specs.each do |name, spec|
           next unless spec.key? :dimensions
 
           output_file = File.join(build_directory, spec[:name])
 
           next unless !File.exist?(output_file) || File.mtime(output_file) <= File.mtime(file)
 
-          image.change_geometry(spec[:dimensions]) do |cols, rows, img|
-            img = img.resize(cols, rows)
-            img = img.sharpen(0.5, 0.5)
+          image_for(name) do |img|
             img.write(output_file)
           end
         end
