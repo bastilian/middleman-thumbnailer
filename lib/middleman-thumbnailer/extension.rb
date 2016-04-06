@@ -15,6 +15,11 @@ module Middleman
       option :source_dir
       option :root
 
+      def initialize(app, options_hash={}, &block)
+        super
+        @@options = options
+      end
+
       def after_configuration
         # stash the source images dir in options for the Rack middleware
         options[:images_source_dir] = File.join(app.source_dir, app.images_dir)

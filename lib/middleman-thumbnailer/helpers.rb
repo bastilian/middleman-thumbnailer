@@ -1,27 +1,29 @@
+require 'ostruct'
+
 module Middleman
   module Thumbnailer
     # Middleman Tempalte Helpers
     module Helpers
-      def thumbnail_specs(image, name)
-        dimensions = Thumbnailer.options[:dimensions]
-        ThumbnailGenerator.specs(image, dimensions)
-      end
-
-      def thumbnail_url(image, name, options = {})
-        include_images_dir = options.delete :include_images_dir
-
-        url = thumbnail_specs(image, name)[name][:name]
-        url = File.join(images_dir, url) if include_images_dir
-
-        url
+      def thumbnail_url(image, name)
+        asset = Middleman::Thumbnailer::Asset.new(collection_options, image)
+        asset.specs[name][:name]
       end
 
       def thumbnail(image, name, html_options = {})
-        specs_for_data_attribute = thumbnail_specs(image, name).map {|name, spec| "#{name}:#{spec[:name]}"}
+        asset = Middleman::Thumbnailer::Asset.new(collection_options, image)
 
-        html_options.merge!({'data-thumbnails' => specs_for_data_attribute.join('|')}) if Thumbnailer.options[:include_data_thumbnails]
+        if Middleman::Thumbnailer::Extension.options[:include_data_thumbnails]
+          specs_for_data_attribute = asset.specs.map { |spec_name, spec| "#{spec_name}:#{spec[:name]}" }
+          html_options.merge!('data-thumbnails' => specs_for_data_attribute.join('|'))
+        end
 
         image_tag(thumbnail_url(image, name), html_options)
+      end
+
+      private
+
+      def collection_options
+        OpenStruct.new(options: Middleman::Thumbnailer::Extension.options)
       end
     end
   end
