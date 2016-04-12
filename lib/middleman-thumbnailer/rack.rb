@@ -18,6 +18,9 @@ module Middleman
       def initialize(app, options = {})
         @app = app
         @options = options
+        if options[:namespace_directory] =~ %r{^/}
+          options[:namespace_directory] = [options[:namespace_directory].gsub(%r{^/}, '')]
+        end
         files = DirGlob.glob(options[:images_source_dir], options[:namespace_directory], options[:filetypes])
         @original_map = ThumbnailGenerator.original_map_for_files(files, options[:dimensions])
       end

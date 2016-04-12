@@ -15,7 +15,7 @@ module Middleman
       option :source_dir
       option :root
 
-      def initialize(app, options_hash={}, &block)
+      def initialize(app, options_hash = {}, &block)
         super
         @@options = options
       end
@@ -25,12 +25,15 @@ module Middleman
         options[:images_source_dir] = File.join(app.source_dir, app.images_dir)
         options[:source_dir] = app.source_dir
         options[:root] = app.root
-
         app.use Rack, options
       end
 
       def directory
-        @dir ||= File.join(app.source_dir, app.images_dir)
+        @dir ||= if options[:namespace_directory] =~ %r{^/}
+                   File.join(app.source_dir, options[:namespace_directory].gsub(%r{^/}, ''), '**')
+                 else
+                   File.join(app.source_dir, app.images_dir, (options[:namespace_directory] || []).join(','))
+                 end
       end
 
       def manipulate_resource_list(resources)

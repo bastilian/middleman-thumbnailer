@@ -30,7 +30,7 @@ describe Middleman::Thumbnailer::Extension do
 
   describe '#directory' do
     it 'returns a combination of source and image dir' do
-      expect(subject.directory).to eq('/SOURCE/IMAGES')
+      expect(subject.directory).to eq('/SOURCE/IMAGES/**')
     end
   end
 

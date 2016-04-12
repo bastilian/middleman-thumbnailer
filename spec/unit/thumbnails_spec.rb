@@ -29,15 +29,9 @@ describe Middleman::Thumbnailer::Thumbnails do
     end
   end
 
-  describe '#namespaces' do
-    it 'returns the namespaces from the options' do
-      expect(subject.namespaces).to eq(options.namespace_directory)
-    end
-  end
-
   describe '#glob' do
     it 'returns a glob for the directory with namespaces and filetypes' do
-      expect(subject.glob).to match(%r(source\/images\/{\*\*}\/\*\*\/\*\.{jpg,JPG,jpeg,JPEG,png,PNG}$))
+      expect(subject.glob).to match(%r(source\/images\/\*\*\/\*\.{jpg,JPG,jpeg,JPEG,png,PNG}$))
     end
   end
 

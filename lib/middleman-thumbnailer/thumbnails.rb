@@ -22,12 +22,8 @@ module Middleman
         extension.app.root
       end
 
-      def namespaces
-        options.namespace_directory
-      end
-
       def glob
-        "#{directory}/{#{namespaces.join(',')}}/**/*.{#{filetypes_with_capitals.join(',')}}"
+        "#{directory}/**/*.{#{filetypes_with_capitals.join(',')}}"
       end
 
       def assets
