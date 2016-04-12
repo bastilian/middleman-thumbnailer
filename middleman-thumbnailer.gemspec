@@ -1,5 +1,6 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require "middleman-thumbnailer/version"
 
 Gem::Specification.new do |s|
@@ -14,12 +15,9 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
 
-  # s.add_runtime_dependency("middleman", ["~> 3.2.2"])
-  s.add_runtime_dependency("rake", [">= 0"])
+  s.add_runtime_dependency("middleman", ["~> 3.4.1"])
   s.add_runtime_dependency("rmagick", ["~> 2.13.0"])
   s.add_runtime_dependency("mime-types", ["2.1"])
-
-  s.add_development_dependency 'rspec'
 end
