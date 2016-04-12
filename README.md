@@ -2,29 +2,6 @@
 
 Generate thumbnail versions of your jpeg & png images
 
-## Performance Issues
-
-While I had hopes for the efficacy of the code (read: I didn't really think about it, as I was working on a small site that needed thumbnails), there are a few issues with using middleman thumbnailer on _large_ sets of images:
-
-* the ruby interpreter: doing any heavy lifting with ruby is, you know, prone to taking a long time
-* apparently RMagick does not report (or cannot via gc mechnisms) it's memory usage properly, therefore GC does not run enough, and your middleman server & build process can get very big.
-
-## Important Note
-
-If you bundle update, you will probably get the following error: 
-
-```stacktrace
-/middleman-core-3.2.2/lib/middleman-core/configuration.rb:37:in \`method_missing': 
-undefined method \`before_build' for Middleman::Application::MiddlemanApplication1:Class (NoMethodError)
-```
-
-middleman-thumbnailer will only (currently) work with the latest v3-stable branch of middleman from git. In your Gemfile use this (for now): 
-
-```ruby
-gem 'middleman', :git => 'https://github.com/middleman/middleman.git', branch: 'v3-stable'
-```
-
-
 ## Installation
 
 Add this line to your `Gemfile`:
@@ -37,7 +14,7 @@ And something like this to your `config.rb`:
 
 ```ruby
   require 'middleman-thumbnailer'
-  activate :thumbnailer, 
+  activate :thumbnailer,
     :dimensions => {
       :small => '200x',
       :medium => '400x300'
