@@ -16,10 +16,10 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 
-  # s.add_runtime_dependency("middleman", ["~> 3.2.2"])
   s.add_runtime_dependency("rake", [">= 0"])
   s.add_runtime_dependency("rmagick", ["~> 2.13.0"])
   s.add_runtime_dependency("mime-types", [">= 2.1"])
+  s.add_runtime_dependency("middleman-core", [">= 4.2.0"])
 
   s.add_development_dependency 'rspec'
 end
