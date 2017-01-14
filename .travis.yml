@@ -1,5 +1,7 @@
 language: ruby
 cache: bundler
+before_script:
+  - mkdir -p ./tmp/aruba
 rvm:
  - 2.4.0
  - jruby
