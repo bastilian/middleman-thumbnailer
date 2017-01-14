@@ -4,3 +4,6 @@ rvm:
  - 1.9
  - 2.2
  - jruby
+matrix:
+  allow_failures:
+    - rvm: jruby
