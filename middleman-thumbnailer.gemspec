@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Nicholas Hemsley"]
   s.email       = ["nick.hems@gmail.com"]
   s.homepage    = "https://github.com/nhemsley/middleman-thumbnailer"
+  s.licenses    = ['MIT']
   s.summary     = %q{Generate thumbnail versions of image files}
   s.description = s.summary
 
