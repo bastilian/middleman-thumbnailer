@@ -1,8 +1,7 @@
 language: ruby
 cache: bundler
 rvm:
- - 1.9
- - 2.2
+ - 2.4
  - jruby
 matrix:
   allow_failures:
