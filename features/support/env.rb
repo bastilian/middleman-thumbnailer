@@ -1,5 +1,3 @@
-require 'aruba/cucumber'
-
 PROJECT_ROOT_PATH = File.dirname(File.dirname(File.dirname(__FILE__)))
 
 ENV['TEST'] = 'true'
