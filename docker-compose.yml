@@ -1,0 +1,7 @@
+version: '2'
+services:
+  test:
+    build: .
+    command: bash -c 'bundle exec rake'
+    volumes:
+      - ./:/src/middleman-thumbnailer
