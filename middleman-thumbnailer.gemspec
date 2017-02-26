@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency("middleman", ["~> 3.4.1"])
   s.add_runtime_dependency("rake", ['<= 11.0'])
-  s.add_runtime_dependency("rmagick", ["~> 2.13.0"])
+  s.add_runtime_dependency("rmagick", ["~> 2.16.0"])
   s.add_runtime_dependency("mime-types", ["~> 2.1"])
 end
