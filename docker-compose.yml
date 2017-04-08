@@ -1,6 +1,6 @@
 version: '2'
 services:
-  test:
+  middleman:
     build: .
     command: bash -c 'bundle exec rake'
     volumes:

@@ -1,8 +1,5 @@
-require "middleman-core"
+require 'middleman-core'
+require 'middleman-thumbnailer/version'
+require 'middleman-thumbnailer/extension'
 
-require "middleman-thumbnailer/version"
-
-::Middleman::Extensions.register(:thumbnailer) do
-  require "middleman-thumbnailer/extension"
-  ::Middleman::Thumbnailer
-end
+::Middleman::Extensions.register(:thumbnailer, Middleman::Thumbnailer::Extension)
