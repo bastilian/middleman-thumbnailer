@@ -35,7 +35,7 @@ module Middleman
 
       def included_directories
         dirs = [namespaced_images_directory]
-        dirs << 'blog' if options[:blog]
+        dirs << 'blog/**' if options[:blog]
       end
 
       def manipulate_resource_list(resources)

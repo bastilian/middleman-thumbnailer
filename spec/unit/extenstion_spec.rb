@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Middleman::Thumbnailer::Extension do
-  let(:root)       { File.join(File.dirname(__FILE__), '../../fixtures/thumbnails') }
+  let(:root)       { File.join(File.dirname(__FILE__), '../../fixtures/site') }
   let(:source_dir) { "#{root}/source" }
   let(:options) do
     double(namespace_directory: ['**'],

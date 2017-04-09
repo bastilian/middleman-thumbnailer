@@ -2,7 +2,7 @@ Feature: Namespacing
   Scenario: Thumbnailing gets correctly namespaced
     Given a fixture app "site"
     And app "site" is using config "namespace"
-    When I run `middleman build`
+    And a successfully built app at "site"
     Then the following files should exist:
       | build/images/background.png |
       | build/images/middleman.png |
