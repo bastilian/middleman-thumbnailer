@@ -17,3 +17,6 @@ deploy:
   gemspec: middleman-thumbnailer.gemspec
   on:
     tags: true
+addons:
+  code_climate:
+  repo_token: $CODECLIMATE_TOKEN
