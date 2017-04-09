@@ -1,8 +1,19 @@
 language: ruby
-cache: bundler
 rvm:
- - 2.4.0
- - jruby
+  - 2.4.1
+  - 2.3.4
+  - 2.2.7
+  - 2.1.7
+  - 2.0.0-p648
+  - jruby
 matrix:
   allow_failures:
     - rvm: jruby
+script:
+  - bundle exec rake
+deploy:
+  provider: rubygems
+  api_key: $RUBYGEMS_API_KEY
+  gemspec: middleman-thumbnailer.gemspec
+  on:
+    tags: true
