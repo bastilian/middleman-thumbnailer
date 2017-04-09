@@ -5,6 +5,7 @@ gemspec
 group :development, :test do
   gem 'aruba'
   gem 'builder'
+  gem 'capybara', require: false
   gem 'cucumber'
   gem 'gem-release'
   gem 'rake'
