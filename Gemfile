@@ -1,11 +1,13 @@
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
 gemspec
 
 group :development, :test do
-  gem "cucumber"
   gem 'aruba'
-  gem "rspec"
-  gem "builder"
-  gem "erubis"
+  gem 'builder'
+  gem 'cucumber'
+  gem 'gem-release'
+  gem 'rake'
+  gem 'rspec'
+  gem 'simplecov', require: false
 end
