@@ -2,8 +2,6 @@
 .bundle
 Gemfile.lock
 pkg/*
-.rvmrc
 bin/
-
+coverage
 tmp/
-TODO
