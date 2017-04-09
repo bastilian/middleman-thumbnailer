@@ -28,12 +28,6 @@ describe Middleman::Thumbnailer::Extension do
     end
   end
 
-  describe '#directory' do
-    it 'returns a combination of source and image dir' do
-      expect(subject.directory).to eq('/SOURCE/IMAGES/**')
-    end
-  end
-
   describe '#manipulate_resource_list' do
     it 'adds a resource to the array for each thumbnail' do
       allow(subject).to receive(:thumbnails).and_return(

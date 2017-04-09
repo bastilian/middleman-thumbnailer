@@ -31,7 +31,7 @@ describe Middleman::Thumbnailer::Thumbnails do
 
   describe '#glob' do
     it 'returns a glob for the directory with namespaces and filetypes' do
-      expect(subject.glob).to match(%r(source\/images\/\*\*\/\*\.{jpg,JPG,jpeg,JPEG,png,PNG}$))
+      expect(subject.glob('images')).to match(%r(images\/\*\*\/\*\.{jpg,JPG,jpeg,JPEG,png,PNG}$))
     end
   end
 
