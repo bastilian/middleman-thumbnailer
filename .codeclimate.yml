@@ -1,3 +1,7 @@
+ratings:
+  paths:
+  - lib/**
+  - "**.rb"
 engines:
   rubocop:
     enabled: true
