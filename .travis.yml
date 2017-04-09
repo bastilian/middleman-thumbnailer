@@ -1,16 +1,18 @@
 language: ruby
 rvm:
-  - ruby-head
-  - 2.4.0
+  - 2.4.1
   - 2.3.1
   - 2.2.4
+env:
+  global:
+    SUPPORTED_MIDDLEMAN="~> 3.4.1"
 matrix:
   include:
-    - env: SUPPORTED_MIDDLEMAN=~> 3.4.1
-    - env: SUPPORTED_MIDDLEMAN=~> 4.2.1
+    - rvm: 2.4.0
+      env: SUPPORTED_MIDDLEMAN="~> 4.2.1"
   allow_failures:
-    - rvm: ruby-head
-    - env: SUPPORTED_MIDDLEMAN="~> 4.2.1"
+    - rvm: 2.4.0
+      env: SUPPORTED_MIDDLEMAN="~> 4.2.1"
 script:
   - bundle exec rake
 deploy:
