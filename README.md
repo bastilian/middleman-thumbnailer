@@ -7,13 +7,14 @@ Generate thumbnail versions of your jpeg & png images
 Add this line to your `Gemfile`:
 
 ```ruby
-gem 'middleman-thumbnailer', :git => 'https://github.com/nhemsley/middleman-thumbnailer.git'
+gem 'middleman-thumbnailer', '~> 0.1'
 ```
 
-And something like this to your `config.rb`:
+## Configuration
+
+To activate generating thumbnails add the following to `config.rb`:
 
 ```ruby
-  require 'middleman-thumbnailer'
   activate :thumbnailer,
     :dimensions => {
       :small => '200x',
@@ -23,19 +24,19 @@ And something like this to your `config.rb`:
     :namespace_directory => %w(gallery)
 ```
 
-If you have a file in images called (for example) background.png, thumbnail versions will be created called:
-  background-small-200x.png
-  background-medium-400x300.png
+This activates the extension and will only process images in `source/images/gallery`.
 
-## Config Options
+For a file called `background.png`, versions named `background-small-200x.png` and `background-medium-400x300.png` will be generated in the same directory.
 
-`:include_data_thumbnails` the list of images will be included in the data-thumbnails attribute for each image displayed with the `thumbnail` helper
+### Config Options
 
-`:namespace_directory` only thumbnail images found within this directory (_within_ the images directory of course)
+ * `:include_data_thumbnails`: `Boolean` (Default: `false`) - Enables including a list all image versions generated as the `data-thumbnails`-attribute for each image when using the `thumbnail()` helper
+
+ * `:namespace_directory`: `Array` (Default: `nil`)
+   only process images found within this directory **within** `source/images`
 
 
-##Helpers
+## Helpers
 
-`thumbnail(image, size, [html_options])` will return the thumbnail image tag for the image of the named dimension/size
-
-`thumbnail_url(image, size)` will return the url for the image of the named dimension/size
+ * `thumbnail(image, size, [html_options])`: returns thumbnail a image tag for `image` in `size`
+ * `thumbnail_url(image, size)`: returns the url for `image` in `size`
